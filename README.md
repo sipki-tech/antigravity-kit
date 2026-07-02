@@ -25,6 +25,7 @@
 
 <p align="center">
   English | <a href="README.ru.md">Русский</a>
+  &nbsp;·&nbsp; <a href="docs/GUIDE.md">📖 User Guide</a>
 </p>
 
 **Antigravity Kit** turns a raw Antigravity agent into a disciplined pipeline: plan → work → loop → review, with protective hooks, structured reasoning, and a two-layer token-optimization stack that directly attacks Antigravity's #1 pain — quota burn.
