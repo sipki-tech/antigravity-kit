@@ -56,38 +56,36 @@
 
 ```bash
 # глобально — все workspace, все поверхности (IDE, CLI, 2.0)
-npx @sipki-tech/antigravity-kit install
+npx github:sipki-tech/antigravity-kit install
 
 # в проект (коммитится — кит получает вся команда)
-npx @sipki-tech/antigravity-kit install --workspace
+npx github:sipki-tech/antigravity-kit install --workspace
 
 # посмотреть план изменений без записи
-npx @sipki-tech/antigravity-kit install --dry-run
+npx github:sipki-tech/antigravity-kit install --dry-run
 
 # + бинарник rtk и его нативный rewrite-хук для Antigravity
-npx @sipki-tech/antigravity-kit install --with-rtk
+npx github:sipki-tech/antigravity-kit install --with-rtk
 
 # + CLI headroom с включённой MCP-записью
-npx @sipki-tech/antigravity-kit install --with-headroom
+npx github:sipki-tech/antigravity-kit install --with-headroom
 
 # всё сразу (= --with-rtk --with-headroom)
-npx @sipki-tech/antigravity-kit install --full
+npx github:sipki-tech/antigravity-kit install --full
 
 # добавить слэш-команды /kit-* в текущий проект
-npx @sipki-tech/antigravity-kit workflows
+npx github:sipki-tech/antigravity-kit workflows
 
 # проверка здоровья / удаление
-npx @sipki-tech/antigravity-kit verify
-npx @sipki-tech/antigravity-kit uninstall
+npx github:sipki-tech/antigravity-kit verify
+npx github:sipki-tech/antigravity-kit uninstall
 ```
 
-Пока пакет не опубликован в npm (или просто по желанию) — установка напрямую с GitHub, команды те же:
+Требуется Node 18+. После установки перезапустите Antigravity. Кит распространяется только через GitHub (в npm не публикуется). npx кэширует установки с GitHub, поэтому чтобы взять последний коммит, добавьте `#main`:
 
 ```bash
-npx github:sipki-tech/antigravity-kit install --full
+npx github:sipki-tech/antigravity-kit#main install --full
 ```
-
-Требуется Node 18+. После установки перезапустите Antigravity. Важно: нескоуповый `antigravity-kit` в npm — чужой пакет, не имеющий к нам отношения; используйте scoped-имя или GitHub-форму.
 
 ## Цикл кита
 
@@ -168,8 +166,8 @@ npx github:sipki-tech/antigravity-kit install --full
 Корпус скиллов — чистый формат Agent Skills:
 
 ```bash
-npx @sipki-tech/antigravity-kit install --host claude-code   # → ~/.claude/skills/
-npx @sipki-tech/antigravity-kit install --host codex          # → ~/.codex/skills/
+npx github:sipki-tech/antigravity-kit install --host claude-code   # → ~/.claude/skills/
+npx github:sipki-tech/antigravity-kit install --host codex          # → ~/.codex/skills/
 ```
 
 Что переносится, а что нет: [docs/portability.md](docs/portability.md).

@@ -5,7 +5,7 @@ The kit's core is deliberately host-agnostic: skills are plain Agent Skills (`SK
 ## Claude Code
 
 ```bash
-npx @sipki-tech/antigravity-kit install --host claude-code
+npx github:sipki-tech/antigravity-kit install --host claude-code
 ```
 
 Copies the nine `kit-*` skills into `~/.claude/skills/`. They are picked up as personal skills; invoke by describing the task or naming the skill. Notes:
@@ -16,7 +16,7 @@ Copies the nine `kit-*` skills into `~/.claude/skills/`. They are picked up as p
 ## Codex
 
 ```bash
-npx @sipki-tech/antigravity-kit install --host codex
+npx github:sipki-tech/antigravity-kit install --host codex
 ```
 
 Copies the skills into `~/.codex/skills/`. Check your Codex version's skills support; older versions only read `AGENTS.md`, in which case paste the relevant playbooks there instead.

@@ -56,38 +56,36 @@ Design principle: the core (skills + MCP) is **portable Agent Skills format** �
 
 ```bash
 # global — all workspaces, all surfaces (IDE, CLI, 2.0)
-npx @sipki-tech/antigravity-kit install
+npx github:sipki-tech/antigravity-kit install
 
 # per-project (committable: your whole team gets the kit)
-npx @sipki-tech/antigravity-kit install --workspace
+npx github:sipki-tech/antigravity-kit install --workspace
 
 # preview without writing anything
-npx @sipki-tech/antigravity-kit install --dry-run
+npx github:sipki-tech/antigravity-kit install --dry-run
 
 # + rtk binary and its native Antigravity rewrite hook
-npx @sipki-tech/antigravity-kit install --with-rtk
+npx github:sipki-tech/antigravity-kit install --with-rtk
 
 # + headroom CLI, with its MCP entry enabled
-npx @sipki-tech/antigravity-kit install --with-headroom
+npx github:sipki-tech/antigravity-kit install --with-headroom
 
 # everything at once (= --with-rtk --with-headroom)
-npx @sipki-tech/antigravity-kit install --full
+npx github:sipki-tech/antigravity-kit install --full
 
 # add /kit-* slash commands to the current project
-npx @sipki-tech/antigravity-kit workflows
+npx github:sipki-tech/antigravity-kit workflows
 
 # health check / removal
-npx @sipki-tech/antigravity-kit verify
-npx @sipki-tech/antigravity-kit uninstall
+npx github:sipki-tech/antigravity-kit verify
+npx github:sipki-tech/antigravity-kit uninstall
 ```
 
-Until the package lands on npm (or always, if you prefer), install straight from GitHub — same commands, different source:
+Requires Node 18+. Restart Antigravity after install. The kit is distributed from GitHub only (not published to npm). npx caches GitHub installs, so to force the latest commit add `#main`:
 
 ```bash
-npx github:sipki-tech/antigravity-kit install --full
+npx github:sipki-tech/antigravity-kit#main install --full
 ```
-
-Requires Node 18+. Restart Antigravity after install. Note: the unscoped `antigravity-kit` on npm is an unrelated package — use the scoped name or the GitHub form.
 
 ## The kit cycle
 
@@ -168,8 +166,8 @@ Skills, rules, hooks, and subagents all live **inside the plugin directory** and
 The skill corpus is plain Agent Skills format:
 
 ```bash
-npx @sipki-tech/antigravity-kit install --host claude-code   # → ~/.claude/skills/
-npx @sipki-tech/antigravity-kit install --host codex          # → ~/.codex/skills/
+npx github:sipki-tech/antigravity-kit install --host claude-code   # → ~/.claude/skills/
+npx github:sipki-tech/antigravity-kit install --host codex          # → ~/.codex/skills/
 ```
 
 What ports and what doesn't: [docs/portability.md](docs/portability.md).

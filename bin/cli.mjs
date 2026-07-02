@@ -17,12 +17,12 @@ import {
 const HELP = `antigravity-kit — Antigravity workflow plugin installer
 
 Usage:
-  npx @sipki-tech/antigravity-kit install [options]
-  npx @sipki-tech/antigravity-kit verify [options]
-  npx @sipki-tech/antigravity-kit uninstall [options]
-  npx @sipki-tech/antigravity-kit workflows [--dry-run]
+  npx github:sipki-tech/antigravity-kit install [options]
+  npx github:sipki-tech/antigravity-kit verify [options]
+  npx github:sipki-tech/antigravity-kit uninstall [options]
+  npx github:sipki-tech/antigravity-kit workflows [--dry-run]
                            # add /kit-* slash commands to the current project
-  (from GitHub, without npm: npx github:sipki-tech/antigravity-kit <command>)
+  (add #main to force the latest commit: npx github:sipki-tech/antigravity-kit#main <command>)
 
 Options:
   --workspace              Install into ./.agents/ of the current project
@@ -94,11 +94,11 @@ function main() {
       console.log(`${mode}installed (${layout.scope}): ${layout.pluginDir}`);
       const verifyFlags = values.workspace ? " --workspace" : "";
       console.log(
-        `Restart Antigravity to pick up the plugin. Run \`npx @sipki-tech/antigravity-kit verify${verifyFlags}\` to check the install.`,
+        `Restart Antigravity to pick up the plugin. Run \`npx github:sipki-tech/antigravity-kit verify${verifyFlags}\` to check the install.`,
       );
       if (layout.scope === "global") {
         console.log(
-          "Tip: run `npx @sipki-tech/antigravity-kit workflows` inside a project to add the /kit-* slash commands there.",
+          "Tip: run `npx github:sipki-tech/antigravity-kit workflows` inside a project to add the /kit-* slash commands there.",
         );
       }
       return 0;
