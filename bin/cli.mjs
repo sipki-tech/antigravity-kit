@@ -93,11 +93,11 @@ function main() {
       if (values["with-rtk"]) installRtk({ dryRun: opts.dryRun });
       console.log(`${mode}installed (${layout.scope}): ${layout.pluginDir}`);
       console.log(
-        "Restart Antigravity to pick up the plugin. Run `npx antigravity-kit verify` to check the install.",
+        "Restart Antigravity to pick up the plugin. Run `npx @sipki-tech/antigravity-kit verify` to check the install.",
       );
       if (layout.scope === "global") {
         console.log(
-          "Tip: run `npx antigravity-kit workflows` inside a project to add the /kit-* slash commands there.",
+          "Tip: run `npx @sipki-tech/antigravity-kit workflows` inside a project to add the /kit-* slash commands there.",
         );
       }
       return 0;
