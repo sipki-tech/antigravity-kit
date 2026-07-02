@@ -1,5 +1,5 @@
 {
-  "name": "antigravity-kit",
+  "name": "@sipki-tech/antigravity-kit",
   "version": "0.1.0",
   "description": "Antigravity-native workflow plugin: plan/work/loop/review cycle, protective hooks, MCP servers, and RTK/Headroom token optimization.",
   "license": "MIT",

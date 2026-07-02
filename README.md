@@ -56,32 +56,38 @@ Design principle: the core (skills + MCP) is **portable Agent Skills format** �
 
 ```bash
 # global — all workspaces, all surfaces (IDE, CLI, 2.0)
-npx antigravity-kit install
+npx @sipki-tech/antigravity-kit install
 
 # per-project (committable: your whole team gets the kit)
-npx antigravity-kit install --workspace
+npx @sipki-tech/antigravity-kit install --workspace
 
 # preview without writing anything
-npx antigravity-kit install --dry-run
+npx @sipki-tech/antigravity-kit install --dry-run
 
 # + rtk binary and its native Antigravity rewrite hook
-npx antigravity-kit install --with-rtk
+npx @sipki-tech/antigravity-kit install --with-rtk
 
 # + headroom CLI, with its MCP entry enabled
-npx antigravity-kit install --with-headroom
+npx @sipki-tech/antigravity-kit install --with-headroom
 
 # everything at once (= --with-rtk --with-headroom)
-npx antigravity-kit install --full
+npx @sipki-tech/antigravity-kit install --full
 
 # add /kit-* slash commands to the current project
-npx antigravity-kit workflows
+npx @sipki-tech/antigravity-kit workflows
 
 # health check / removal
-npx antigravity-kit verify
-npx antigravity-kit uninstall
+npx @sipki-tech/antigravity-kit verify
+npx @sipki-tech/antigravity-kit uninstall
 ```
 
-Requires Node 18+. Restart Antigravity after install.
+Until the package lands on npm (or always, if you prefer), install straight from GitHub — same commands, different source:
+
+```bash
+npx github:sipki-tech/antigravity-kit install --full
+```
+
+Requires Node 18+. Restart Antigravity after install. Note: the unscoped `antigravity-kit` on npm is an unrelated package — use the scoped name or the GitHub form.
 
 ## The kit cycle
 
@@ -162,8 +168,8 @@ Skills, rules, hooks, and subagents all live **inside the plugin directory** and
 The skill corpus is plain Agent Skills format:
 
 ```bash
-npx antigravity-kit install --host claude-code   # → ~/.claude/skills/
-npx antigravity-kit install --host codex          # → ~/.codex/skills/
+npx @sipki-tech/antigravity-kit install --host claude-code   # → ~/.claude/skills/
+npx @sipki-tech/antigravity-kit install --host codex          # → ~/.codex/skills/
 ```
 
 What ports and what doesn't: [docs/portability.md](docs/portability.md).

@@ -56,32 +56,38 @@
 
 ```bash
 # глобально — все workspace, все поверхности (IDE, CLI, 2.0)
-npx antigravity-kit install
+npx @sipki-tech/antigravity-kit install
 
 # в проект (коммитится — кит получает вся команда)
-npx antigravity-kit install --workspace
+npx @sipki-tech/antigravity-kit install --workspace
 
 # посмотреть план изменений без записи
-npx antigravity-kit install --dry-run
+npx @sipki-tech/antigravity-kit install --dry-run
 
 # + бинарник rtk и его нативный rewrite-хук для Antigravity
-npx antigravity-kit install --with-rtk
+npx @sipki-tech/antigravity-kit install --with-rtk
 
 # + CLI headroom с включённой MCP-записью
-npx antigravity-kit install --with-headroom
+npx @sipki-tech/antigravity-kit install --with-headroom
 
 # всё сразу (= --with-rtk --with-headroom)
-npx antigravity-kit install --full
+npx @sipki-tech/antigravity-kit install --full
 
 # добавить слэш-команды /kit-* в текущий проект
-npx antigravity-kit workflows
+npx @sipki-tech/antigravity-kit workflows
 
 # проверка здоровья / удаление
-npx antigravity-kit verify
-npx antigravity-kit uninstall
+npx @sipki-tech/antigravity-kit verify
+npx @sipki-tech/antigravity-kit uninstall
 ```
 
-Требуется Node 18+. После установки перезапустите Antigravity.
+Пока пакет не опубликован в npm (или просто по желанию) — установка напрямую с GitHub, команды те же:
+
+```bash
+npx github:sipki-tech/antigravity-kit install --full
+```
+
+Требуется Node 18+. После установки перезапустите Antigravity. Важно: нескоуповый `antigravity-kit` в npm — чужой пакет, не имеющий к нам отношения; используйте scoped-имя или GitHub-форму.
 
 ## Цикл кита
 
@@ -162,8 +168,8 @@ npx antigravity-kit uninstall
 Корпус скиллов — чистый формат Agent Skills:
 
 ```bash
-npx antigravity-kit install --host claude-code   # → ~/.claude/skills/
-npx antigravity-kit install --host codex          # → ~/.codex/skills/
+npx @sipki-tech/antigravity-kit install --host claude-code   # → ~/.claude/skills/
+npx @sipki-tech/antigravity-kit install --host codex          # → ~/.codex/skills/
 ```
 
 Что переносится, а что нет: [docs/portability.md](docs/portability.md).

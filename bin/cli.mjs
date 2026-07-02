@@ -17,11 +17,12 @@ import {
 const HELP = `antigravity-kit — Antigravity workflow plugin installer
 
 Usage:
-  npx antigravity-kit install [options]
-  npx antigravity-kit verify [options]
-  npx antigravity-kit uninstall [options]
-  npx antigravity-kit workflows [--dry-run]   # add /kit-* slash commands
-                                              # to the current project
+  npx @sipki-tech/antigravity-kit install [options]
+  npx @sipki-tech/antigravity-kit verify [options]
+  npx @sipki-tech/antigravity-kit uninstall [options]
+  npx @sipki-tech/antigravity-kit workflows [--dry-run]
+                           # add /kit-* slash commands to the current project
+  (from GitHub, without npm: npx github:sipki-tech/antigravity-kit <command>)
 
 Options:
   --workspace              Install into ./.agents/ of the current project
