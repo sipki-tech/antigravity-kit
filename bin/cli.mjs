@@ -92,8 +92,9 @@ function main() {
       printActions(mode, actions);
       if (values["with-rtk"]) installRtk({ dryRun: opts.dryRun });
       console.log(`${mode}installed (${layout.scope}): ${layout.pluginDir}`);
+      const verifyFlags = values.workspace ? " --workspace" : "";
       console.log(
-        "Restart Antigravity to pick up the plugin. Run `npx @sipki-tech/antigravity-kit verify` to check the install.",
+        `Restart Antigravity to pick up the plugin. Run \`npx @sipki-tech/antigravity-kit verify${verifyFlags}\` to check the install.`,
       );
       if (layout.scope === "global") {
         console.log(
