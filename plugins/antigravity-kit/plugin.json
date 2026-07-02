@@ -1,0 +1,34 @@
+{
+  "name": "antigravity-kit",
+  "version": "0.1.0",
+  "description": "Disciplined agent pipeline for Antigravity: plan -> work -> loop -> review, protective hooks, and RTK/Headroom token optimization.",
+  "author": "antigravity-kit contributors",
+  "license": "MIT",
+  "skills": "./skills",
+  "rules": "./rules",
+  "hooks": "./hooks/hooks.json",
+  "interface": {
+    "displayName": "Antigravity Kit",
+    "shortDescription": "Kit workflow cycle (plan/work/loop/review), safety hooks, sequential-thinking, and token hygiene for Antigravity.",
+    "category": "Developer Tools",
+    "capabilities": [
+      "Skills",
+      "Rules",
+      "Hooks",
+      "Subagents",
+      "MCP",
+      "Workflow",
+      "Token Optimization"
+    ],
+    "defaultPrompt": [
+      "kit-plan this migration",
+      "kit-work the approved plan",
+      "kit finish this change test-first",
+      "kit-review inspect the diff before shipping",
+      "kit-clean remove AI slop from this diff",
+      "kit-debug reproduce and fix this failure",
+      "kit-goal turn this brief into a completion checklist"
+    ],
+    "brandColor": "#5B8DEF"
+  }
+}

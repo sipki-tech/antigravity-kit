@@ -1,0 +1,43 @@
+{
+  "name": "antigravity-kit",
+  "version": "0.1.0",
+  "description": "Antigravity-native workflow plugin: plan/work/loop/review cycle, protective hooks, MCP servers, and RTK/Headroom token optimization.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sipki-tech/antigravity-kit.git"
+  },
+  "homepage": "https://github.com/sipki-tech/antigravity-kit#readme",
+  "bugs": {
+    "url": "https://github.com/sipki-tech/antigravity-kit/issues"
+  },
+  "type": "module",
+  "bin": {
+    "antigravity-kit": "bin/cli.mjs"
+  },
+  "files": [
+    "bin/",
+    "installer/",
+    "plugins/",
+    "docs/",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test": "node --test test/*.test.mjs"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": [
+    "antigravity",
+    "agent",
+    "plugin",
+    "skills",
+    "hooks",
+    "mcp",
+    "token-optimization",
+    "rtk",
+    "headroom"
+  ]
+}
