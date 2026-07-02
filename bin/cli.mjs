@@ -31,6 +31,8 @@ Options:
                            'rtk init --agent antigravity'.
   --with-headroom          Also install the headroom CLI (via uv/pipx/pip)
                            and enable its MCP entry.
+  --full                   Everything at once: shorthand for
+                           --with-rtk --with-headroom.
   --permission-profile <p> One of: ${PROFILES.join(", ")} (default: safe).
   --host <h>               Port the skill corpus to another host:
                            claude-code | codex.
@@ -45,6 +47,7 @@ function main() {
       "dry-run": { type: "boolean", default: false },
       "with-rtk": { type: "boolean", default: false },
       "with-headroom": { type: "boolean", default: false },
+      full: { type: "boolean", default: false },
       "permission-profile": { type: "string", default: "safe" },
       host: { type: "string" },
       help: { type: "boolean", short: "h", default: false },
@@ -55,6 +58,10 @@ function main() {
   if (values.help) {
     console.log(HELP);
     return 0;
+  }
+  if (values.full) {
+    values["with-rtk"] = true;
+    values["with-headroom"] = true;
   }
 
   const opts = {

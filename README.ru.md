@@ -70,6 +70,9 @@ npx antigravity-kit install --with-rtk
 # + CLI headroom с включённой MCP-записью
 npx antigravity-kit install --with-headroom
 
+# всё сразу (= --with-rtk --with-headroom)
+npx antigravity-kit install --full
+
 # добавить слэш-команды /kit-* в текущий проект
 npx antigravity-kit workflows
 
