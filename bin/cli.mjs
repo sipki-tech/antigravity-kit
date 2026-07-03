@@ -91,11 +91,16 @@ function main() {
       const { layout, actions } = install(opts);
       printActions(mode, actions);
       if (values["with-rtk"]) installRtk({ dryRun: opts.dryRun });
-      console.log(`${mode}installed (${layout.scope}): ${layout.pluginDir}`);
-      const verifyFlags = values.workspace ? " --workspace" : "";
       console.log(
-        `Restart Antigravity to pick up the plugin. Run \`npx github:sipki-tech/antigravity-kit verify${verifyFlags}\` to check the install.`,
+        opts.dryRun
+          ? `[dry-run] would install (${layout.scope}): ${layout.pluginDir}`
+          : `installed (${layout.scope}): ${layout.pluginDir}`,
       );
+      const verifyFlags = values.workspace ? " --workspace" : "";
+      if (!opts.dryRun)
+        console.log(
+          `Restart Antigravity to pick up the plugin. Run \`npx github:sipki-tech/antigravity-kit verify${verifyFlags}\` to check the install.`,
+        );
       if (layout.scope === "global") {
         console.log(
           "Tip: run `npx github:sipki-tech/antigravity-kit workflows` inside a project to add the /kit-* slash commands there.",
@@ -114,7 +119,11 @@ function main() {
       }
       const { layout, actions } = uninstall(opts);
       printActions(mode, actions);
-      console.log(`${mode}uninstalled (${layout.scope})`);
+      console.log(
+        opts.dryRun
+          ? `[dry-run] would uninstall (${layout.scope})`
+          : `uninstalled (${layout.scope})`,
+      );
       console.log(
         "Note: MCP servers you edited after install were left in place; rtk (if installed) is not removed.",
       );
@@ -123,7 +132,11 @@ function main() {
     case "workflows": {
       const { targets, actions } = installWorkflows({ dryRun: opts.dryRun });
       printActions(mode, actions);
-      console.log(`${mode}workflows installed: ${targets.join(", ")}`);
+      console.log(
+        opts.dryRun
+          ? `[dry-run] would install workflows: ${targets.join(", ")}`
+          : `workflows installed: ${targets.join(", ")}`,
+      );
       console.log("Invoke them in the agent as /kit-plan, /kit-work, /kit-loop, /kit-review, /kit-clean, /kit-debug, /kit-goal, /kit-teamwork.");
       return 0;
     }

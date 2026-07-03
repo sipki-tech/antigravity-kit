@@ -59,7 +59,8 @@
 # глобально — все workspace, все поверхности (IDE, CLI, 2.0)
 npx github:sipki-tech/antigravity-kit install
 
-# в проект (коммитится — кит получает вся команда)
+# в проект (коммитится — кит получает вся команда;
+# рекомендуемый .gitignore — в разделе «Team setup» docs/GUIDE.ru.md)
 npx github:sipki-tech/antigravity-kit install --workspace
 
 # посмотреть план изменений без записи
@@ -182,7 +183,7 @@ npx github:sipki-tech/antigravity-kit install --host codex          # → ~/.cod
 ## Разработка
 
 ```bash
-npm test                        # node --test: 31 тест, ноль зависимостей
+npm test                        # node --test: полный набор тестов, ноль зависимостей
 node bin/cli.mjs install --dry-run
 ```
 

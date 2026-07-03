@@ -59,7 +59,8 @@ Design principle: the core (skills + MCP) is **portable Agent Skills format** â€
 # global â€” all workspaces, all surfaces (IDE, CLI, 2.0)
 npx github:sipki-tech/antigravity-kit install
 
-# per-project (committable: your whole team gets the kit)
+# per-project (committable: your whole team gets the kit;
+# see "Team setup" in docs/GUIDE.md for the recommended .gitignore)
 npx github:sipki-tech/antigravity-kit install --workspace
 
 # preview without writing anything
@@ -182,7 +183,7 @@ What ports and what doesn't: [docs/portability.md](docs/portability.md).
 ## Development
 
 ```bash
-npm test                        # node --test: 31 tests, zero dependencies
+npm test                        # node --test: full suite, zero dependencies
 node bin/cli.mjs install --dry-run
 ```
 

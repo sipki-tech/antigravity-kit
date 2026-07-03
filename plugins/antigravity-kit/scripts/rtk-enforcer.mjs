@@ -42,7 +42,12 @@ export function checkCommand(cmd, env = process.env, probes = {}) {
   // Compound/redirected commands: rewriting is risky, stay out of the way.
   if (/[|;&><$`]/.test(trimmed)) return ALLOW;
 
-  const first = trimmed.split(/\s+/)[0];
+  // Env-assignment prefixes don't change the command: NODE_ENV=test npm ...
+  const tokens = trimmed.split(/\s+/);
+  let start = 0;
+  while (start < tokens.length && /^[A-Za-z_][A-Za-z0-9_]*=/.test(tokens[start]))
+    start += 1;
+  const first = tokens[start] ?? "";
   if (!PREFIXES.includes(first)) return ALLOW;
 
   const available = probes.rtkAvailable ?? rtkAvailable;
@@ -50,9 +55,10 @@ export function checkCommand(cmd, env = process.env, probes = {}) {
   if (!available()) return ALLOW;
   if (alreadyHooked()) return ALLOW;
 
+  const suggestion = [...tokens.slice(0, start), "rtk", ...tokens.slice(start)].join(" ");
   return {
     allow_tool: false,
-    deny_reason: `[antigravity-kit token-hygiene] Run this through rtk to compress the output: \`rtk ${trimmed}\`. To intentionally run raw, prefix with KIT_RAW=1.`,
+    deny_reason: `[antigravity-kit token-hygiene] Run this through rtk to compress the output: \`${suggestion}\`. To intentionally run raw, prefix with KIT_RAW=1.`,
   };
 }
 

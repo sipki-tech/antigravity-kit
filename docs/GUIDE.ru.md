@@ -239,7 +239,24 @@ git add .agents && git commit -m "add antigravity-kit"
 
 Теперь `.agents/plugins/antigravity-kit/` и `.agents/workflows/` в репозитории. Любой, кто откроет проект в Antigravity, автоматически получит плагин, хуки, скиллы и команды `/kit-*` — одни правила, одни ревью-гейты, одна токен-дисциплина на всю команду.
 
-Что коммитить, а что игнорировать: плагин и workflows — коммитить; файлы планов (`.agents/kit/plans/`) — полезные артефакты для PR, если хотите; `.agents/kit-goal.md` обычно временный. Дефолтный `.gitignore` игнорирует `.agents/` — настройте под предпочтения команды.
+Что коммитить, а что игнорировать: общий кит (`.agents/plugins/`, `.agents/workflows/`, `.agents/mcp_config.json`) — коммитить, локальные рабочие артефакты — нет. Рекомендуемый сниппет для `.gitignore` проекта:
+
+```gitignore
+# antigravity-kit: локальные рабочие артефакты (планы, пайплайны, цели)
+.agents/kit/
+.agents/kit-goal.md
+```
+
+Если проект уже игнорирует `.agents/` целиком, наоборот раз-игнорируйте общие части:
+
+```gitignore
+.agents/*
+!.agents/plugins/
+!.agents/workflows/
+!.agents/mcp_config.json
+```
+
+Файлы планов (`.agents/kit/plans/`) — полезные артефакты для PR; если хотите их коммитить — уберите строку `.agents/kit/`; `.agents/kit-goal.md` в любом случае обычно временный.
 
 ---
 

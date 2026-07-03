@@ -1,6 +1,13 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { mkdtempSync, mkdirSync, writeFileSync, existsSync, readFileSync } from "node:fs";
+import {
+  mkdtempSync,
+  mkdirSync,
+  writeFileSync,
+  existsSync,
+  readFileSync,
+  readdirSync,
+} from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
@@ -134,6 +141,19 @@ test("activePipeline returns the un-approved pipeline, null when done", () => {
   assert.equal(activePipeline(root), null);
   init("feat", { root });
   assert.equal(activePipeline(root)?.feature, "feat");
+});
+
+test("rapid successive writes leave state valid and no temp files behind", () => {
+  const root = freshProject();
+  init("feat", { root });
+  for (let i = 1; i <= 20; i++) setTask(`T-${i}`, "wip", { root });
+  const dir = join(pipelineDir(root), "feat");
+  const state = JSON.parse(readFileSync(join(dir, "state.json"), "utf8"));
+  assert.equal(Object.keys(state.tasks).length, 20);
+  assert.deepEqual(
+    readdirSync(dir).filter((f) => f.includes(".tmp-")),
+    [],
+  );
 });
 
 test("state stays valid JSON after each mutation (atomic)", () => {

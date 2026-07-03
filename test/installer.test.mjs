@@ -1,6 +1,13 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { mkdtempSync, existsSync, readFileSync, mkdirSync, writeFileSync } from "node:fs";
+import {
+  mkdtempSync,
+  existsSync,
+  readFileSync,
+  mkdirSync,
+  writeFileSync,
+  rmSync,
+} from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
@@ -10,6 +17,7 @@ import {
   verify,
   listSkills,
   installWorkflows,
+  requirePayload,
 } from "../installer/install.mjs";
 import { detectLayout } from "../installer/paths.mjs";
 
@@ -170,6 +178,52 @@ test("subagent presets ship with the payload", () => {
     assert.match(text, /^developer_instructions = """/m);
     assert.match(text, /^model = /m);
   }
+});
+
+test("requirePayload rejects a broken checkout with a friendly error", () => {
+  requirePayload(); // real payload passes
+  const broken = freshHome(); // exists but has no skills/workflows
+  assert.throws(() => requirePayload(broken), /payload is incomplete.*npx/s);
+  assert.throws(() => requirePayload(join(broken, "nope")), /payload is incomplete/);
+});
+
+test("verify fails when an installed skill or workflow is missing", () => {
+  const home = freshHome();
+  const { layout } = install({ home, headroomAvailable: false });
+  assert.equal(verify({ home }).pass, true);
+
+  rmSync(join(layout.pluginDir, "skills", "kit-plan"), { recursive: true });
+  const broken = verify({ home });
+  assert.equal(broken.pass, false);
+  const failed = broken.checks.find((c) => c.name === "all skills installed");
+  assert.equal(failed.pass, false);
+  assert.match(failed.note, /kit-plan/);
+});
+
+test("verify reports optional tools without failing", () => {
+  const home = freshHome();
+  install({ home, headroomAvailable: false });
+  const { checks } = verify({ home });
+  for (const tool of ["rtk", "headroom"]) {
+    const probe = checks.find((c) => c.name === `optional tool: ${tool}`);
+    assert.equal(probe.pass, true);
+    assert.match(probe.note, /installed/);
+  }
+});
+
+test("verify flags a stale installed_version.json", () => {
+  const home = freshHome();
+  const { layout } = install({ home, headroomAvailable: false });
+  writeFileSync(
+    join(layout.pluginDir, "installed_version.json"),
+    JSON.stringify({ version: "0.0.0-stale" }),
+  );
+  const res = verify({ home });
+  assert.equal(res.pass, false);
+  const failed = res.checks.find(
+    (c) => c.name === "installed_version matches plugin.json",
+  );
+  assert.equal(failed.pass, false);
 });
 
 test("skill corpus is complete", () => {

@@ -151,6 +151,25 @@ test("danger-guard: blocks rm -rf outside workspace", () => {
   assert.equal(dangerCheck(`rm -rf ${CWD}`, CWD).allow_tool, false);
 });
 
+test("danger-guard: normalizes path variants of the workspace root", () => {
+  // Regression: trailing slash / dot variants must not bypass the root check.
+  assert.equal(dangerCheck(`rm -rf ${CWD}/`, CWD).allow_tool, false);
+  assert.equal(dangerCheck(`rm -rf ${CWD}/.`, CWD).allow_tool, false);
+  assert.equal(dangerCheck("rm -rf .", CWD).allow_tool, false);
+  assert.equal(dangerCheck("rm -rf ./", CWD).allow_tool, false);
+  assert.equal(dangerCheck("rm -rf subdir/..", CWD).allow_tool, false);
+});
+
+test("danger-guard: catches rm behind sudo/env/assignment wrappers", () => {
+  assert.equal(dangerCheck("sudo rm -rf /", CWD).allow_tool, false);
+  assert.equal(dangerCheck("env rm -rf ~", CWD).allow_tool, false);
+  assert.equal(dangerCheck("FOO=1 rm -rf /etc/foo", CWD).allow_tool, false);
+  assert.equal(dangerCheck("cd /tmp && sudo rm -rf /etc/foo", CWD).allow_tool, false);
+  assert.equal(dangerCheck('rm -rf "/etc/foo"', CWD).allow_tool, false);
+  // One in-workspace target plus one outside: still denied.
+  assert.equal(dangerCheck("rm -rf ./dist /etc/foo", CWD).allow_tool, false);
+});
+
 test("danger-guard: allows rm -rf inside workspace and non-recursive rm", () => {
   assert.equal(dangerCheck("rm -rf node_modules", CWD).allow_tool, true);
   assert.equal(dangerCheck("rm -rf ./dist build", CWD).allow_tool, true);
@@ -169,6 +188,17 @@ test("danger-guard: blocks force push to main, allows lease to feature", () => {
     true,
   );
   assert.equal(dangerCheck("git push origin main", CWD).allow_tool, true);
+});
+
+test("danger-guard: blocks +main refspec force push, allows +feature", () => {
+  assert.equal(dangerCheck("git push origin +main", CWD).allow_tool, false);
+  assert.equal(dangerCheck("git push origin +master", CWD).allow_tool, false);
+  assert.equal(dangerCheck("git push origin +feature-x", CWD).allow_tool, true);
+});
+
+test("danger-guard: blocks secret reads behind wrappers", () => {
+  assert.equal(dangerCheck("sudo cat .env", CWD).allow_tool, false);
+  assert.equal(dangerCheck("FOO=1 head ~/.ssh/id_rsa", CWD).allow_tool, false);
 });
 
 test("danger-guard: blocks secret reads, allows templates", () => {
@@ -199,6 +229,14 @@ test("rtk-enforcer: nudges listed commands when rtk present and unhooked", () =>
   const res = rtkCheck("git status", {}, rtkOn);
   assert.equal(res.allow_tool, false);
   assert.match(res.deny_reason, /rtk git status/);
+});
+
+test("rtk-enforcer: sees through env-assignment prefixes", () => {
+  const res = rtkCheck("NODE_ENV=test npm run build", {}, rtkOn);
+  assert.equal(res.allow_tool, false);
+  assert.match(res.deny_reason, /NODE_ENV=test rtk npm run build/);
+  // KIT_RAW=1 stays a bypass even though it is an env assignment.
+  assert.equal(rtkCheck("KIT_RAW=1 npm run build", {}, rtkOn).allow_tool, true);
 });
 
 test("rtk-enforcer: silent when prefixed, bypassed, complex, or unlisted", () => {

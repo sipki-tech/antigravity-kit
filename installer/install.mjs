@@ -28,7 +28,21 @@ function writeInstalledVersion(journal, pluginDir) {
   });
 }
 
+// A corrupt checkout (interrupted npx download, stripped payload) would
+// otherwise surface as a raw readdirSync stack trace mid-install.
+export function requirePayload(payloadDir = PAYLOAD_DIR) {
+  for (const dir of [payloadDir, join(payloadDir, "skills"), join(payloadDir, "workflows")]) {
+    if (!existsSync(dir)) {
+      throw new Error(
+        `antigravity-kit payload is incomplete (missing ${dir}). ` +
+          "The checkout is corrupt — re-run via `npx github:sipki-tech/antigravity-kit install`.",
+      );
+    }
+  }
+}
+
 export function install(opts = {}) {
+  requirePayload();
   const layout = detectLayout(opts);
   const journal = createJournal(Boolean(opts.dryRun));
 
@@ -55,6 +69,7 @@ export function install(opts = {}) {
 }
 
 export function uninstall(opts = {}) {
+  requirePayload();
   const layout = detectLayout(opts);
   const journal = createJournal(Boolean(opts.dryRun));
 
@@ -100,12 +115,41 @@ export function verify(opts = {}) {
       existsSync(join(layout.pluginDir, "scripts", script)),
     );
   }
+  // Integrity: every payload skill/workflow must exist in the installed copy.
+  const missingSkills = listSkills().filter(
+    (s) => !existsSync(join(layout.pluginDir, "skills", s, "SKILL.md")),
+  );
+  ok("all skills installed", missingSkills.length === 0, missingSkills.join(", "));
+  const missingWorkflows = listWorkflows().filter(
+    (wf) => !existsSync(join(layout.pluginDir, "workflows", wf)),
+  );
+  ok(
+    "all workflows installed",
+    missingWorkflows.length === 0,
+    missingWorkflows.join(", "),
+  );
+  const installedVersion = readJson(
+    join(layout.pluginDir, "installed_version.json"),
+  )?.version;
+  ok(
+    "installed_version matches plugin.json",
+    Boolean(installedVersion) && installedVersion === manifest?.version,
+    `installed_version=${installedVersion} plugin.json=${manifest?.version}`,
+  );
   const mcp = readJson(layout.mcpConfigFile);
   ok(
     "mcp: sequential-thinking registered",
     Boolean(mcp?.mcpServers?.["sequential-thinking"]),
     layout.mcpConfigFile,
   );
+  // Health report for optional external tools — informative, never failing.
+  for (const tool of ["rtk", "headroom"]) {
+    ok(
+      `optional tool: ${tool}`,
+      true,
+      binaryAvailable(tool) ? "installed" : "not installed (optional)",
+    );
+  }
   return { layout, checks, pass: checks.every((c) => c.pass) };
 }
 
@@ -128,6 +172,7 @@ function installWorkflowsInto(journal, projectRoot) {
 // Standalone command: drop the /kit-* workflows into the current project
 // without a full workspace install (useful alongside a global install).
 export function installWorkflows({ projectRoot = process.cwd(), dryRun = false } = {}) {
+  requirePayload();
   const journal = createJournal(Boolean(dryRun));
   installWorkflowsInto(journal, projectRoot);
   return { targets: workflowsDirs(projectRoot), actions: journal.actions };

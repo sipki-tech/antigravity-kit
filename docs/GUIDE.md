@@ -239,7 +239,24 @@ git add .agents && git commit -m "add antigravity-kit"
 
 Now `.agents/plugins/antigravity-kit/` and `.agents/workflows/` are in the repo. Anyone who opens the project in Antigravity gets the plugin, the hooks, the skills, and the `/kit-*` commands automatically — same rules, same review gates, same token discipline across the team.
 
-What to commit vs. ignore: commit the plugin and workflows; plan files (`.agents/kit/plans/`) make useful PR artifacts if you want them, while `.agents/kit-goal.md` is usually transient. The default `.gitignore` treats `.agents/` as ignored — adjust per your team's preference.
+What to commit vs. ignore: commit the shared kit (`.agents/plugins/`, `.agents/workflows/`, `.agents/mcp_config.json`), keep local working artifacts out. The recommended snippet for your project's `.gitignore`:
+
+```gitignore
+# antigravity-kit: local working artifacts (plans, pipelines, goals)
+.agents/kit/
+.agents/kit-goal.md
+```
+
+If your project already ignores `.agents/` wholesale, un-ignore the shared parts instead:
+
+```gitignore
+.agents/*
+!.agents/plugins/
+!.agents/workflows/
+!.agents/mcp_config.json
+```
+
+Plan files (`.agents/kit/plans/`) make useful PR artifacts if you want them — drop the `.agents/kit/` line in that case; `.agents/kit-goal.md` is usually transient either way.
 
 ---
 

@@ -13,6 +13,7 @@ import {
   writeFileSync,
 } from "node:fs";
 import { dirname, isAbsolute, join, resolve } from "node:path";
+import { randomUUID } from "node:crypto";
 
 export const PHASES = [
   "explore",
@@ -60,7 +61,9 @@ function statePath(feature, root) {
 
 function writeAtomic(file, text) {
   mkdirSync(dirname(file), { recursive: true });
-  const tmp = `${file}.tmp-${process.pid}`;
+  // Unique per write: PID alone collides when writes race within one process
+  // or PIDs are recycled across hook invocations.
+  const tmp = `${file}.tmp-${process.pid}-${Date.now()}-${randomUUID().slice(0, 8)}`;
   writeFileSync(tmp, text);
   renameSync(tmp, file);
 }

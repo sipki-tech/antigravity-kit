@@ -2,9 +2,13 @@
 // PreToolUse (run_command): veto destructive commands and secret reads.
 // Fail-open on parsing errors; deny only on confident matches.
 
-import { isAbsolute, resolve } from "node:path";
+import { resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 import { runHook, commandLineOf, cwdOf, ALLOW } from "./lib/io.mjs";
+
+// Wrappers that can precede the real command: sudo/command/env and
+// VAR=value assignments. Matched so `sudo rm -rf /` is still caught.
+const WRAPPER = String.raw`(?:(?:sudo|command|env|[A-Za-z_][A-Za-z0-9_]*=\S*)\s+)*`;
 
 export function checkCommand(cmd, cwd) {
   if (!cmd || typeof cmd !== "string") return ALLOW;
@@ -25,8 +29,12 @@ function deny(reason) {
   return { allow_tool: false, deny_reason: `[antigravity-kit danger-guard] ${reason}` };
 }
 
+const RM_RE = new RegExp(
+  String.raw`(^|[;&|]\s*)${WRAPPER}rm\s+((?:-{1,2}[\w-]+\s+)*)(.+)`,
+);
+
 function checkRm(cmd, cwd) {
-  const rm = /(^|[;&|]\s*)rm\s+((?:-{1,2}[\w-]+\s+)*)(.+)/.exec(cmd);
+  const rm = RM_RE.exec(cmd);
   if (!rm) return null;
   const flags = rm[2] || "";
   const recursive = /(^|\s)-{1,2}[\w]*r/i.test(flags) || /--recursive/.test(flags);
@@ -42,7 +50,9 @@ function checkRm(cmd, cwd) {
       return deny(`rm -rf on '${clean}' is blocked.`);
     if (clean.startsWith("~") || clean.startsWith("$HOME"))
       return deny(`rm -rf outside the workspace ('${clean}') is blocked.`);
-    const abs = isAbsolute(clean) ? clean : resolve(cwd, clean);
+    // resolve() also normalizes trailing '/', '/.' and '..' segments so
+    // `rm -rf /path/to/root/` cannot slip past the equality checks below.
+    const abs = resolve(cwd, clean);
     const root = resolve(cwd);
     if (!abs.startsWith(root + "/") && abs !== root)
       return deny(`rm -rf outside the workspace ('${clean}') is blocked.`);
@@ -56,6 +66,9 @@ function checkForcePush(cmd) {
   const push = /git\s+push\b([^;&|]*)/.exec(cmd);
   if (!push) return null;
   const rest = push[1] || "";
+  // `git push origin +main` force-pushes without any --force flag.
+  if (/\s\+(main|master)\b/.test(rest))
+    return deny("Force-push to main/master is blocked.");
   const hasForce = /(^|\s)(--force|-f)(\s|$)/.test(rest);
   const hasLease = /--force-with-lease/.test(rest);
   if (!hasForce && !hasLease) return null;
@@ -73,8 +86,9 @@ function checkForcePush(cmd) {
 const SECRET_PATH =
   /(^|[\s/"'=])\.env(\.\w+)?(?![\w.])|id_rsa|id_ed25519|\.pem\b|\.p12\b|\.keychain|credentials(\.json)?\b|\.npmrc\b|\.netrc\b/;
 const SECRET_ALLOWED = /\.env\.(example|sample|template|dist)\b/;
-const READER =
-  /(^|[;&|]\s*)(cat|less|more|head|tail|bat|strings|xxd|od|grep|rg|awk|sed|source|\.)\s/;
+const READER = new RegExp(
+  String.raw`(^|[;&|]\s*)${WRAPPER}(cat|less|more|head|tail|bat|strings|xxd|od|grep|rg|awk|sed|source|\.)\s`,
+);
 
 function checkSecretRead(cmd) {
   if (!READER.test(cmd)) return null;
