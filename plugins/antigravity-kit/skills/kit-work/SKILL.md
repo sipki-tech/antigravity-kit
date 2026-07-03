@@ -25,6 +25,10 @@ Implement the current plan step by step, staying inside its scope. The contract:
 - Completion criteria from the plan are checked and reported one by one.
 - No changes exist outside the plan's scope.
 
+## Persistence
+
+Keep working until the plan is COMPLETELY executed — every step done or deviation recorded. If a command or tool fails, analyze the error and try a corrected approach rather than stopping; only pause for the user when a deviation changes scope or you are genuinely blocked.
+
 ## Constraints
 
 - Do not add features, refactors, or "improvements" the plan does not mention.

@@ -102,6 +102,7 @@ Every stage works two ways: a **wake word** in the prompt (`kit-plan this migrat
 | `kit-debug` | debugger | Reproduce → hypotheses via sequential-thinking → verified cause → minimal fix. |
 | `kit-goal` | long-runner | Checklist in `.agents/kit-goal.md`; the Stop hook keeps work going until every item is checked. |
 | `kit-teamwork` | teamwork prep | Pre-flight brief for `/teamwork-preview` in `.agents/kit/teamwork-brief.md`: verifiable criteria, explicit non-goals, disjoint lanes. Never launches the run itself. |
+| `kit-spec` | spec pipeline | Heavy mode for complex features: explore → requirements (WHEN/SHALL) → design → task-plan → implementation → review, with a state engine enforcing approval gates. See the [guide](docs/GUIDE.md). |
 
 Two supporting skills load on demand: **kit-seq-thinking** (when and how to use the sequential-thinking tool, thought budget 5–9) and **kit-token-hygiene** (rtk prefix, selective reading, no raw logs).
 
@@ -190,6 +191,7 @@ Layout: `plugins/antigravity-kit/` is the payload (skills, rules, hooks, scripts
 ## Acknowledgments
 
 - [antigravity-swarm](https://github.com/wjgoarxiv/antigravity-swarm) — the workflow-layer pattern and battle-tested hook wire formats.
+- [sdd](https://github.com/sipki-tech/sdd) — the spec-driven pipeline design behind kit's spec mode (kit reimplements it Antigravity-native; the two are complementary siblings).
 - [rtk](https://github.com/rtk-ai/rtk) — terminal output compression.
 - [headroom](https://github.com/chopratejas/headroom) — context compression for everything else.
 

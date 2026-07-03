@@ -34,6 +34,8 @@ const DIRECTIVES = {
     "kit-goal stage: convert the brief into verifiable criteria in .agents/kit-goal.md (markdown checklist). Check items only after running their verification.",
   "kit-teamwork":
     "kit-teamwork stage: prepare a /teamwork-preview brief in .agents/kit/teamwork-brief.md — success criteria with verification commands, scope with explicit non-goals, non-overlapping lanes. Advise against teamwork for coupled refactors (suggest kit-plan + kit-work). Never launch /teamwork-preview yourself.",
+  "kit-spec":
+    "kit-spec stage: drive the spec pipeline via pipeline.mjs (explore → requirements(WHEN/SHALL) → design → task-plan → implementation → review). Read templates/<phase>.md, write the artifact, register it, then STOP at the gate for the user's approval — never advance a phase yourself. Keep working the current phase until it is COMPLETELY resolved; on an engine error run doctor and retry. For small work use the light cycle (kit-plan) instead.",
 };
 
 // /teamwork-preview (Ultra plan) can burn a week's quota in one run and its

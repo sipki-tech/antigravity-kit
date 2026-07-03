@@ -111,7 +111,21 @@ test("workspace install lands in .agents and includes workflows", () => {
   assert.ok(existsSync(join(ws, ".agents", "mcp_config.json")));
   assert.ok(existsSync(join(ws, ".agents", "workflows", "kit-plan.md")));
   assert.ok(existsSync(join(ws, ".agents", "workflows", "kit-teamwork.md")));
+  assert.ok(existsSync(join(ws, ".agents", "workflows", "kit-spec.md")));
   assert.equal(layout.scope, "workspace");
+});
+
+test("spec pipeline ships: engine, orchestrator skill, XML templates", () => {
+  const home = freshHome();
+  const { layout } = install({ home });
+  assert.ok(existsSync(join(layout.pluginDir, "scripts", "pipeline.mjs")));
+  assert.ok(existsSync(join(layout.pluginDir, "scripts", "lib", "pipeline-core.mjs")));
+  assert.ok(existsSync(join(layout.pluginDir, "skills", "kit-spec", "SKILL.md")));
+  for (const t of ["explore.md", "requirements.md", "design.md"]) {
+    const tpl = join(layout.pluginDir, "skills", "kit-spec", "templates", t);
+    assert.ok(existsSync(tpl), `missing template ${t}`);
+    assert.match(readFileSync(tpl, "utf8"), /^<role>/m, `${t} should be XML-structured`);
+  }
 });
 
 test("workflows command targets .agents and mirrors .agent when present", () => {
@@ -156,6 +170,7 @@ test("skill corpus is complete", () => {
     "kit-debug",
     "kit-goal",
     "kit-teamwork",
+    "kit-spec",
   ]) {
     assert.ok(skills.includes(s), `missing skill ${s}`);
   }

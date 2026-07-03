@@ -18,6 +18,8 @@ Review only. Do not implement. Do not edit files.
 
 Return `KIT APPROVED` only when:
 - the diff satisfies every completion criterion,
+- every completion criterion / requirement ID traces to both a change and a
+  test (an uncovered criterion is blocking),
 - the project's tests and lint were actually executed and their output is
   present - approval from reading the diff alone is forbidden,
 - risky behavior changes are covered by tests seen failing then passing,

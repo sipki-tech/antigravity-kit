@@ -101,6 +101,8 @@ The reviewer reads the diff hunk by hunk **and must actually run** the project's
 
 That's the cycle. For a small change you might skip straight to `/kit-loop`; for anything with more than a couple of moving parts, start at `/kit-plan`.
 
+This is the **light cycle** — the everyday driver. For big, high-stakes features there's a heavier **spec mode** (section 4b) with formal requirements, design, and enforced approval gates. You choose the depth.
+
 ---
 
 ## 4. The stages in depth
@@ -115,6 +117,7 @@ That's the cycle. For a small change you might skip straight to `/kit-loop`; for
 | hit a bug | `kit-debug` | reproduce → hypothesize → minimal fix |
 | have a multi-session goal | `kit-goal` | a checklist that survives restarts |
 | plan a `/teamwork-preview` run | `kit-teamwork` | a complete brief before you spend the quota |
+| build a complex/high-stakes feature | `kit-spec` | a phased spec pipeline with enforced gates (section 4b) |
 
 Two more skills load automatically when relevant and never need to be called by name:
 
@@ -125,6 +128,42 @@ Two more skills load automatically when relevant and never need to be called by 
 
 - **Slash command** — `/kit-plan`. Reliable, autocompletes, composable. Requires workflows installed in the project (`… workflows`).
 - **Wake word** — just write `kit-plan …` in your prompt. Convenient, but a heuristic. The hook ignores identifier-like text (`kit_helper.mjs`, `src/kit-plan/`), and bare `kit` only triggers as the first word.
+
+---
+
+## 4b. Spec mode — for complex features
+
+The light cycle is great until a feature is big and risky enough that getting the requirements wrong is expensive. **Spec mode** (`/kit-spec`) adds three front phases and enforces approval gates with a deterministic state engine:
+
+```
+explore → requirements → design → task-plan → implementation → review → done
+          [approve]      [approve] [approve]  [approve]       [approve] [approve]
+```
+
+The last three phases **reuse the skills you already know** — task-plan is `kit-plan`, implementation is `kit-work` + `kit-loop`, review is `kit-review`. Spec mode only adds the front end (explore, formal WHEN/SHALL requirements, design ADRs) and the enforcement.
+
+**How it runs.** One entry — `/kit-spec add billing` — and the orchestrator drives the sequence. For each phase it writes an artifact to `.agents/kit/pipeline/<feature>/`, then **stops at the gate** and waits for your approval. You approve; it advances. The gates are real: a small Node engine (`pipeline.mjs`) tracks the phase and **refuses to advance without a registered artifact** — the agent can't skip a phase or declare done early. The Stop hook reinforces it: wander off with a pipeline mid-flight and it reminds you which phase is waiting.
+
+**Why a state engine and not just markdown?** Because in a spec-driven flow the whole point is that gates are enforced, not suggested — the same principle as `kit-review` demanding executed tests. The engine also means the pipeline survives context trimming and resumes cleanly.
+
+**When to use it:** unclear requirements, architectural decisions, anything where misunderstanding is costly. **When not to:** small edits and bug fixes — that's the light cycle, and spec mode is heavier on purpose.
+
+```bash
+/kit-spec <feature>        # start / continue
+/kit-spec-status           # where am I?
+/kit-spec-approve          # advance after you've reviewed the artifact
+```
+
+Requirements written here (`R1`, `R2`, …) are traced all the way through: `kit-review` checks that every requirement maps to both a change and a test.
+
+### kit vs SDD
+
+The spec pipeline is inspired by [sipki-tech/sdd](https://github.com/sipki-tech/sdd), a mature universal spec-driven skill. The difference:
+
+- **kit** is Antigravity-native and self-contained — the pipeline runs as plugin workflows, the Stop hook surfaces state, everything lives in `.agents/`, and it's tuned for Gemini. You never need to install anything else.
+- **SDD** is universal — it runs across 40+ agents (Claude Code, Cursor, Codex, Copilot…) for portability.
+
+Pick by need: staying in Antigravity → kit's spec mode; needing the same pipeline across many tools → SDD. They're siblings; neither requires the other.
 
 ---
 

@@ -15,7 +15,12 @@ import { promptTextOf } from "../plugins/antigravity-kit/scripts/lib/io.mjs";
 import { checkCommand as dangerCheck } from "../plugins/antigravity-kit/scripts/danger-guard.mjs";
 import { checkCommand as rtkCheck } from "../plugins/antigravity-kit/scripts/rtk-enforcer.mjs";
 import { reminderFor } from "../plugins/antigravity-kit/scripts/diagnostics-handoff.mjs";
-import { continuation } from "../plugins/antigravity-kit/scripts/goal-continuation.mjs";
+import {
+  continuation,
+  pipelineContinuation,
+} from "../plugins/antigravity-kit/scripts/goal-continuation.mjs";
+import { init as pipelineInit } from "../plugins/antigravity-kit/scripts/lib/pipeline-core.mjs";
+import { mkdirSync } from "node:fs";
 
 const SCRIPTS = join(
   dirname(fileURLToPath(import.meta.url)),
@@ -42,6 +47,13 @@ test("wake-word: detects stage aliases", () => {
   assert.equal(detectAlias("please kit-review the diff"), "kit-review");
   assert.equal(detectAlias("kit-remove-ai-slops now"), "kit-remove-ai-slops");
   assert.equal(detectAlias("kit-teamwork prep for the migration"), "kit-teamwork");
+  assert.equal(detectAlias("kit-spec the billing feature"), "kit-spec");
+});
+
+test("kit-spec alias injects the pipeline directive", () => {
+  const hit = runScript("kit-wake-word.mjs", { prompt: "kit-spec this feature" });
+  assert.match(hit.injectSteps[0].userMessage, /spec pipeline/);
+  assert.match(hit.injectSteps[0].userMessage, /STOP at the gate/);
 });
 
 test("kit-teamwork alias injects the brief directive", () => {
@@ -238,4 +250,15 @@ test("goal-continuation e2e: Stop wire format", () => {
   const busy = runScript("goal-continuation.mjs", { fullyIdle: false });
   assert.equal(busy.decision, "continue");
   assert.match(busy.reason, /Background work/);
+});
+
+test("goal-continuation surfaces an unfinished spec pipeline on Stop", () => {
+  const proj = mkdtempSync(join(tmpdir(), "kit-stop-pipe-"));
+  mkdirSync(join(proj, ".git"), { recursive: true });
+  assert.equal(pipelineContinuation(proj), null); // no pipeline yet
+  pipelineInit("checkout-flow", { root: proj });
+  const cont = pipelineContinuation(proj);
+  assert.equal(cont.decision, "continue");
+  assert.match(cont.reason, /checkout-flow/);
+  assert.match(cont.reason, /explore/);
 });

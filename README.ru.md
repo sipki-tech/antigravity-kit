@@ -102,6 +102,7 @@ npx github:sipki-tech/antigravity-kit#main install --full
 | `kit-debug` | отладчик | Воспроизведение → гипотезы через sequential-thinking → доказанная причина → минимальный фикс. |
 | `kit-goal` | долгий раннер | Чек-лист в `.agents/kit-goal.md`; Stop-хук продолжает работу, пока не отмечен каждый пункт. |
 | `kit-teamwork` | подготовка teamwork | Предполётный бриф для `/teamwork-preview` в `.agents/kit/teamwork-brief.md`: верифицируемые критерии, явные non-goals, непересекающиеся lanes. Сам запуск не делает. |
+| `kit-spec` | спек-пайплайн | Тяжёлый режим для сложных фич: explore → requirements (WHEN/SHALL) → design → task-plan → implementation → review, движок состояния навязывает апрув-гейты. См. [руководство](docs/GUIDE.ru.md). |
 
 Два вспомогательных скилла подгружаются по требованию: **kit-seq-thinking** (когда и как включать sequential-thinking, бюджет мыслей 5–9) и **kit-token-hygiene** (rtk-префикс, выборочное чтение, никаких сырых логов).
 
@@ -190,6 +191,7 @@ node bin/cli.mjs install --dry-run
 ## Благодарности
 
 - [antigravity-swarm](https://github.com/wjgoarxiv/antigravity-swarm) — паттерн workflow-слоя и проверенные боем wire-форматы хуков.
+- [sdd](https://github.com/sipki-tech/sdd) — дизайн спек-пайплайна, легший в основу спек-режима кита (кит реализует его нативно под Antigravity; они комплементарные сиблинги).
 - [rtk](https://github.com/rtk-ai/rtk) — сжатие вывода терминала.
 - [headroom](https://github.com/chopratejas/headroom) — сжатие контекста для всего остального.
 

@@ -21,7 +21,8 @@ Turn a request into a numbered, executable plan with explicit scope, risks, and 
    - **Risks** — what can break, what is uncertain, what needs a spike.
    - **Completion criteria** — observable checks (tests pass, command output, behavior) that define done.
    The file is the source of truth: it survives context trimming, so long tasks resume from it, not from conversation memory.
-5. End with: `Next: kit-work <plan-slug>`.
+5. **Spec-pipeline mode:** if a `kit-spec` pipeline is active (`.agents/kit/pipeline/<feature>/requirements.md` exists), this plan IS the task-plan phase — tag each step with the requirement IDs it serves (e.g. `- [ ] add token-bucket middleware (R1, R2)`) so review can trace them. Save the plan as the phase artifact and register it with `pipeline.mjs artifact`.
+6. End with: `Next: kit-work <plan-slug>`.
 
 ## Definition of Done
 

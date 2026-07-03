@@ -16,8 +16,9 @@ Review the pending change as a skeptical maintainer would: diff, tests, docs, an
    - Scope creep: changes not related to the stated task.
    - AI slop: dead code, redundant comments, duplicated docs (delegate cleanup to `kit-clean` / `kit-remove-ai-slops`).
 2. **Mandatory:** run the project's own checks — test suite and linter — before any verdict. Use the `rtk` prefix. If checks cannot run, the verdict must say so and be marked incomplete.
-3. Check the non-code surface: README/docs updated if behavior changed, install/config steps still accurate, no secrets or credentials in the diff.
-4. Give a structured verdict:
+3. **Traceability.** Take the completion criteria — from the plan (`.agents/kit/plans/`) or, if a spec pipeline is active, the requirement IDs in `.agents/kit/pipeline/<feature>/requirements.md`. For each one, confirm two things: a change in the diff implements it, AND a test exercises it. Any criterion/requirement without both is a **Blocking** finding.
+4. Check the non-code surface: README/docs updated if behavior changed, install/config steps still accurate, no secrets or credentials in the diff.
+5. Give a structured verdict:
    - **Blocking** — must fix before shipping.
    - **Recommended** — worth fixing, not blocking.
    - **Checks** — each command you ran and its result.
@@ -25,6 +26,7 @@ Review the pending change as a skeptical maintainer would: diff, tests, docs, an
 ## Definition of Done
 
 - Tests and lint were executed in this session and their results reported.
+- Every completion criterion / requirement is traced to a change and a test.
 - Every blocking finding references a concrete file/line or command output.
 - The verdict explicitly states ship / don't ship.
 
