@@ -115,6 +115,21 @@ test("workspace install lands in .agents and includes workflows", () => {
   assert.equal(layout.scope, "workspace");
 });
 
+test("plugin.json has object author; installed_version.json is written", () => {
+  const home = freshHome();
+  const { layout } = install({ home, headroomAvailable: false });
+  const manifest = JSON.parse(
+    readFileSync(join(layout.pluginDir, "plugin.json"), "utf8"),
+  );
+  // Working plugins use an object author; a bare string can trip validation.
+  assert.equal(typeof manifest.author, "object", "author must be an object");
+  // The decisive fix: every working plugin has installed_version.json.
+  const iv = JSON.parse(
+    readFileSync(join(layout.pluginDir, "installed_version.json"), "utf8"),
+  );
+  assert.equal(iv.version, manifest.version);
+});
+
 test("spec pipeline ships: engine, orchestrator skill, XML templates", () => {
   const home = freshHome();
   const { layout } = install({ home });

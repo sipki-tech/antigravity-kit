@@ -15,13 +15,28 @@ import { binaryAvailable } from "./rtk.mjs";
 const PACKAGE_ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 export const PAYLOAD_DIR = join(PACKAGE_ROOT, "plugins", PLUGIN_NAME);
 
+// The Antigravity plugin manager writes installed_version.json into every
+// installed plugin; the loader uses it to recognize the plugin as installed.
+// Our npx installer must write it too, or the plugin is silently ignored.
+function pluginVersion() {
+  return readJson(join(PAYLOAD_DIR, "plugin.json"), { version: "0.0.0" }).version;
+}
+
+function writeInstalledVersion(journal, pluginDir) {
+  writeJson(journal, join(pluginDir, "installed_version.json"), {
+    version: pluginVersion(),
+  });
+}
+
 export function install(opts = {}) {
   const layout = detectLayout(opts);
   const journal = createJournal(Boolean(opts.dryRun));
 
   copyDir(journal, PAYLOAD_DIR, layout.pluginDir);
+  writeInstalledVersion(journal, layout.pluginDir);
   for (const mirror of layout.mirrorPluginDirs) {
     copyDir(journal, PAYLOAD_DIR, mirror);
+    writeInstalledVersion(journal, mirror);
   }
 
   mergeMcpConfig(journal, layout.mcpConfigFile, {
@@ -63,6 +78,14 @@ export function verify(opts = {}) {
   ok("plugin dir", existsSync(layout.pluginDir), layout.pluginDir);
   const manifest = readJson(join(layout.pluginDir, "plugin.json"));
   ok("plugin.json parses", manifest?.name === PLUGIN_NAME);
+  // Match the schema of working plugins: author as an object.
+  ok("plugin.json author is an object", typeof manifest?.author === "object");
+  // The single thing every working plugin has and a raw copy lacks — the
+  // loader uses it to recognize the plugin as installed.
+  ok(
+    "installed_version.json present",
+    existsSync(join(layout.pluginDir, "installed_version.json")),
+  );
   const hooks = readJson(join(layout.pluginDir, "hooks", "hooks.json"));
   ok("hooks.json parses", Boolean(hooks?.[PLUGIN_NAME]));
   for (const script of [

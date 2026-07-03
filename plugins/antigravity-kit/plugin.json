@@ -1,15 +1,29 @@
 {
   "name": "antigravity-kit",
   "version": "0.1.0",
-  "description": "Disciplined agent pipeline for Antigravity: plan -> work -> loop -> review, protective hooks, and RTK/Headroom token optimization.",
-  "author": "antigravity-kit contributors",
+  "description": "Disciplined agent pipeline for Antigravity: plan -> work -> loop -> review, protective hooks, spec mode, and RTK/Headroom token optimization.",
+  "author": {
+    "name": "sipki-tech"
+  },
+  "repository": "https://github.com/sipki-tech/antigravity-kit",
   "license": "MIT",
+  "keywords": [
+    "antigravity",
+    "agent",
+    "plugin",
+    "skills",
+    "hooks",
+    "mcp",
+    "workflow",
+    "spec-driven",
+    "token-optimization"
+  ],
   "skills": "./skills",
   "rules": "./rules",
   "hooks": "./hooks/hooks.json",
   "interface": {
     "displayName": "Antigravity Kit",
-    "shortDescription": "Kit workflow cycle (plan/work/loop/review), safety hooks, sequential-thinking, and token hygiene for Antigravity.",
+    "shortDescription": "Kit workflow cycle (plan/work/loop/review), spec mode, safety hooks, and token hygiene for Antigravity.",
     "category": "Developer Tools",
     "capabilities": [
       "Skills",
@@ -23,11 +37,9 @@
     "defaultPrompt": [
       "kit-plan this migration",
       "kit-work the approved plan",
-      "kit finish this change test-first",
       "kit-review inspect the diff before shipping",
-      "kit-clean remove AI slop from this diff",
-      "kit-debug reproduce and fix this failure",
-      "kit-goal turn this brief into a completion checklist"
+      "kit-spec this high-stakes feature",
+      "kit-debug reproduce and fix this failure"
     ],
     "brandColor": "#5B8DEF"
   }
