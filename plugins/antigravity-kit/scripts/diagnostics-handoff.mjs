@@ -21,11 +21,34 @@ const CHECKS = {
   ".kt": "project build / tests",
 };
 
+// Path segments that mark a file as security-sensitive. Matched as whole
+// tokens (split on /._- etc.) so `tokenizer.ts` or `author.ts` don't trigger.
+const SENSITIVE_TOKENS = new Set([
+  "auth", "oauth", "jwt", "acl", "sso",
+  "session", "sessions", "login", "signin", "signup",
+  "password", "passwords", "secret", "secrets", "token", "tokens",
+  "payment", "payments", "billing", "checkout",
+  "crypto", "credential", "credentials",
+]);
+
+export function isSensitivePath(file) {
+  return file
+    .toLowerCase()
+    .split(/[\\/._\-\s]+/)
+    .some((t) => SENSITIVE_TOKENS.has(t));
+}
+
 export function reminderFor(file) {
   if (!file) return null;
   const checks = CHECKS[extname(file).toLowerCase()];
-  if (!checks) return null;
-  return `[antigravity-kit] ${file} changed — before moving on, run the project's own checks (${checks}) with the rtk prefix. Guidance only; nothing was executed.`;
+  const sensitive = isSensitivePath(file);
+  if (!checks && !sensitive) return null;
+  let note = `[antigravity-kit] ${file} changed —`;
+  if (checks)
+    note += ` before moving on, run the project's own checks (${checks}) with the rtk prefix.`;
+  if (sensitive)
+    note += ` this path looks security-sensitive (auth/payments/secrets): review with kit-review's hardened checklist — input validation at boundaries, error paths that don't leak data, no hardcoded secrets.`;
+  return note + " Guidance only; nothing was executed.";
 }
 
 if (import.meta.url === pathToFileURL(process.argv[1] ?? "").href)

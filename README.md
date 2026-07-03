@@ -78,6 +78,9 @@ npx github:sipki-tech/antigravity-kit install --full
 # add /kit-* slash commands to the current project
 npx github:sipki-tech/antigravity-kit workflows
 
+# refresh an existing install (prints old -> new version; #main skips the npx cache)
+npx github:sipki-tech/antigravity-kit#main update
+
 # health check (files, hooks, MCP, skill/workflow integrity,
 # version match, optional rtk/headroom status) / removal
 npx github:sipki-tech/antigravity-kit verify
@@ -146,12 +149,13 @@ Known preview limitations: MCP OAuth is unsupported (prefer API-key auth for rem
 
 ## Subagents
 
-Two TOML presets ship in `agents/` (installed with the plugin tree):
+Three TOML presets ship in `agents/` (installed with the plugin tree):
 
 | Agent | Role |
 | --- | --- |
 | `kit-planner` | Plan-only specialist: numbered plan with scope, risks, completion criteria. Never edits files. |
 | `kit-reviewer` | Strict verifier: demands executed test/lint evidence, findings by severity, verdict `KIT APPROVED` / `KIT REJECTED`. Missing evidence is a blocking issue. |
+| `kit-architect` | Design-document reviewer for kit-spec's design gate (opt-in): ADR-to-requirement traceability, failure-mode coverage, verdict `DESIGN SOUND` / `DESIGN GAPS`. |
 
 The `model` field defaults to `gemini-3.5-flash` — edit the TOML to pin another. Custom subagents may require a paid plan; if your build doesn't list them, the rest of the kit is unaffected.
 

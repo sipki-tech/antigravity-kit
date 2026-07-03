@@ -35,3 +35,9 @@ Turn a request into a numbered, executable plan with explicit scope, risks, and 
 - Do not write or edit code at this stage.
 - Do not start executing the plan; wait for the user to invoke `kit-work` or approve explicitly.
 - Do not pad the plan with alternatives you are not recommending.
+
+## Rationalizations
+
+- "The change is tiny, no plan needed." — Tiny diffs break prod precisely because nobody scopes them; a three-line plan costs a minute.
+- "I'll keep the plan in my head as I go." — In-head plans don't survive context trimming; the file does.
+- "The user is in a hurry, skip the file." — Skipping the plan trades one minute now for a redo later; hurry is the argument *for* the file.

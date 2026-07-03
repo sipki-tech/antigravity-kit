@@ -256,7 +256,7 @@ If your project already ignores `.agents/` wholesale, un-ignore the shared parts
 !.agents/mcp_config.json
 ```
 
-Plan files (`.agents/kit/plans/`) make useful PR artifacts if you want them — drop the `.agents/kit/` line in that case; `.agents/kit-goal.md` is usually transient either way.
+Plan files (`.agents/kit/plans/`) and review verdicts (`.agents/kit/reviews/` — kit-review writes its verdict, findings, and executed-check evidence there) make useful PR artifacts if you want them — drop the `.agents/kit/` line in that case; `.agents/kit-goal.md` is usually transient either way.
 
 ---
 
@@ -277,7 +277,7 @@ Permission profiles (`--permission-profile safe|balanced|full|none`, default `sa
 
 **`npx antigravity-kit` installs the wrong thing.** The unscoped name on npm is an unrelated package. Always use the GitHub form: `npx github:sipki-tech/antigravity-kit#main`.
 
-**My changes aren't picked up.** npx caches GitHub installs. Add `#main` to force the latest commit, or run `npm cache clean --force`.
+**My changes aren't picked up.** npx caches GitHub installs. Run `npx github:sipki-tech/antigravity-kit#main update` — it fetches the latest commit, re-syncs the payload, and prints the old → new version. (`npm cache clean --force` is the sledgehammer fallback.)
 
 **`verify` fails after a workspace install.** Use `verify --workspace` — plain `verify` checks the global `~/.gemini` location.
 

@@ -28,3 +28,9 @@ Find and fix the actual cause of a failure with the smallest possible change, ba
 
 - No shotgun fixes ("changed three things, one of them helped").
 - A signal that pattern-matches a known failure may still have a different cause — verify before acting on the pattern.
+
+## Rationalizations
+
+- "I can see the bug, fix it right away." — The first plausible cause is wrong often enough to pay for the reproduction every time.
+- "Can't reproduce it, but the fix looks right." — An unreproduced fix is a guess with a commit message; gathering information IS the task.
+- "While I'm here, let me clean this up." — Mixed diffs hide which change actually fixed the failure — and which one broke something else.

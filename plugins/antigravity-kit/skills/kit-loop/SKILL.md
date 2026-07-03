@@ -31,3 +31,9 @@ Drive a change to completion through short cycles where every claim is backed by
 - Never claim "tests pass" without having run them in this session.
 - Do not batch many behaviors into one giant cycle; keep iterations small.
 - If a test cannot be written (no harness, external dependency), say so explicitly and propose the closest verifiable check instead.
+
+## Rationalizations
+
+- "The test will obviously pass, skip the red step." — A test never seen failing proves nothing; it may pass vacuously.
+- "I'll write all the tests after all the code." — Batching hides which change broke what; that's the debugging you're trying to avoid.
+- "The full suite is slow, the targeted test is enough." — The final full run is the deal; skipping it ships blind against everything you didn't touch on purpose.

@@ -14,7 +14,10 @@ import {
 import { promptTextOf } from "../plugins/antigravity-kit/scripts/lib/io.mjs";
 import { checkCommand as dangerCheck } from "../plugins/antigravity-kit/scripts/danger-guard.mjs";
 import { checkCommand as rtkCheck } from "../plugins/antigravity-kit/scripts/rtk-enforcer.mjs";
-import { reminderFor } from "../plugins/antigravity-kit/scripts/diagnostics-handoff.mjs";
+import {
+  reminderFor,
+  isSensitivePath,
+} from "../plugins/antigravity-kit/scripts/diagnostics-handoff.mjs";
 import {
   continuation,
   pipelineContinuation,
@@ -270,6 +273,18 @@ test("diagnostics-handoff: reminds for known extensions only", () => {
   assert.match(reminderFor("main.py"), /pytest/);
   assert.equal(reminderFor("notes.txt"), null);
   assert.equal(reminderFor(""), null);
+});
+
+test("diagnostics-handoff: security nudge on sensitive paths, token-exact", () => {
+  assert.match(reminderFor("src/auth/login.ts"), /security-sensitive/);
+  assert.match(reminderFor("payments/charge.py"), /security-sensitive/);
+  // Sensitive path fires even without a known-extension checks entry.
+  assert.match(reminderFor("config/secrets.yaml"), /security-sensitive/);
+  // Whole-token matching: tokenizer/author must not trigger.
+  assert.equal(isSensitivePath("lib/tokenizer.ts"), false);
+  assert.equal(isSensitivePath("src/author.ts"), false);
+  assert.doesNotMatch(reminderFor("lib/tokenizer.ts"), /security-sensitive/);
+  assert.equal(reminderFor("README.md"), null);
 });
 
 // --- goal-continuation ---

@@ -256,7 +256,7 @@ git add .agents && git commit -m "add antigravity-kit"
 !.agents/mcp_config.json
 ```
 
-Файлы планов (`.agents/kit/plans/`) — полезные артефакты для PR; если хотите их коммитить — уберите строку `.agents/kit/`; `.agents/kit-goal.md` в любом случае обычно временный.
+Файлы планов (`.agents/kit/plans/`) и вердикты ревью (`.agents/kit/reviews/` — kit-review пишет туда вердикт, находки и вывод реально выполненных проверок) — полезные артефакты для PR; если хотите их коммитить — уберите строку `.agents/kit/`; `.agents/kit-goal.md` в любом случае обычно временный.
 
 ---
 
@@ -277,7 +277,7 @@ git add .agents && git commit -m "add antigravity-kit"
 
 **`npx antigravity-kit` ставит не то.** Нескоуповое имя в npm — чужой пакет. Всегда используйте GitHub-форму: `npx github:sipki-tech/antigravity-kit#main`.
 
-**Изменения не подхватываются.** npx кэширует установки с GitHub. Добавьте `#main`, чтобы взять последний коммит, или выполните `npm cache clean --force`.
+**Изменения не подхватываются.** npx кэширует установки с GitHub. Выполните `npx github:sipki-tech/antigravity-kit#main update` — команда возьмёт последний коммит, пересинхронизирует payload и напечатает старую → новую версию. (`npm cache clean --force` — запасная кувалда.)
 
 **`verify` падает после установки в проект.** Используйте `verify --workspace` — простой `verify` проверяет глобальный путь `~/.gemini`.
 

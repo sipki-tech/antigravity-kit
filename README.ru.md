@@ -78,6 +78,9 @@ npx github:sipki-tech/antigravity-kit install --full
 # добавить слэш-команды /kit-* в текущий проект
 npx github:sipki-tech/antigravity-kit workflows
 
+# обновить существующую установку (печатает старую -> новую версию; #main обходит кэш npx)
+npx github:sipki-tech/antigravity-kit#main update
+
 # проверка здоровья (файлы, хуки, MCP, целостность скиллов/workflows,
 # совпадение версий, статус опциональных rtk/headroom) / удаление
 npx github:sipki-tech/antigravity-kit verify
@@ -146,12 +149,13 @@ npx github:sipki-tech/antigravity-kit#main install --full
 
 ## Субагенты
 
-Два TOML-пресета в `agents/` (ставятся вместе с деревом плагина):
+Три TOML-пресета в `agents/` (ставятся вместе с деревом плагина):
 
 | Агент | Роль |
 | --- | --- |
 | `kit-planner` | Только план: нумерованный план со скоупом, рисками, критериями. Файлы не правит. |
 | `kit-reviewer` | Строгий верификатор: требует выполненных тестов/линта, находки по severity, вердикт `KIT APPROVED` / `KIT REJECTED`. Отсутствие доказательств — блокер. |
+| `kit-architect` | Ревьюер design-документа на design-гейте kit-spec (опционально): трассировка ADR к требованиям, покрытие failure modes, вердикт `DESIGN SOUND` / `DESIGN GAPS`. |
 
 Поле `model` по умолчанию `gemini-3.5-flash` — меняется в TOML. Кастомные субагенты могут требовать платный план; если ваш билд их не видит, остальной кит не страдает.
 

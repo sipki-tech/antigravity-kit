@@ -1,11 +1,15 @@
 #!/usr/bin/env node
 import { parseArgs } from "node:util";
+import { join } from "node:path";
 import {
   install,
   uninstall,
   verify,
   installWorkflows,
+  PAYLOAD_DIR,
 } from "../installer/install.mjs";
+import { detectLayout } from "../installer/paths.mjs";
+import { readJson } from "../installer/fsutil.mjs";
 import { installRtk } from "../installer/rtk.mjs";
 import { installHeadroom } from "../installer/headroom.mjs";
 import { PROFILES } from "../installer/permissions.mjs";
@@ -18,6 +22,8 @@ const HELP = `antigravity-kit — Antigravity workflow plugin installer
 
 Usage:
   npx github:sipki-tech/antigravity-kit install [options]
+  npx github:sipki-tech/antigravity-kit#main update [options]
+                           # refresh an existing install, show old -> new version
   npx github:sipki-tech/antigravity-kit verify [options]
   npx github:sipki-tech/antigravity-kit uninstall [options]
   npx github:sipki-tech/antigravity-kit workflows [--dry-run]
@@ -106,6 +112,25 @@ function main() {
           "Tip: run `npx github:sipki-tech/antigravity-kit workflows` inside a project to add the /kit-* slash commands there.",
         );
       }
+      return 0;
+    }
+    case "update": {
+      const layout = detectLayout(opts);
+      const before = readJson(
+        join(layout.pluginDir, "installed_version.json"),
+      )?.version;
+      const target = readJson(join(PAYLOAD_DIR, "plugin.json"), {}).version;
+      const { actions } = install(opts);
+      printActions(mode, actions);
+      if (!before)
+        console.log(`${mode}not installed before — performed a fresh install (${target})`);
+      else if (before === target)
+        console.log(`${mode}already up to date (${target}) — payload re-synced`);
+      else console.log(`${mode}updated: ${before} -> ${target}`);
+      console.log(
+        "What changed: https://github.com/sipki-tech/antigravity-kit/blob/main/CHANGELOG.md",
+      );
+      if (!opts.dryRun) console.log("Restart Antigravity to pick up the update.");
       return 0;
     }
     case "uninstall": {

@@ -5,6 +5,16 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); ver
 
 ## [Unreleased]
 
+## [0.2.0] — 2026-07-03
+
+### Added
+
+- **`update` command** — `npx github:sipki-tech/antigravity-kit#main update` refreshes an existing install and prints the old → new version (or "already up to date"); points at this CHANGELOG.
+- **Sensitive-path security nudge** — editing a file whose path mentions auth/sessions/payments/secrets/crypto now triggers a reminder to apply kit-review's hardened checklist (input validation, non-leaking error paths, no hardcoded secrets). Whole-token path matching, so `tokenizer.ts` doesn't trigger.
+- **Review artifacts** — kit-review persists its verdict, findings, and executed-check evidence to `.agents/kit/reviews/<slug>.md`, symmetric with plans; attachable to PRs as review evidence.
+- **`kit-architect` subagent** — optional architecture pass at kit-spec's design gate: ADR-to-requirement traceability, failure-mode coverage, verdict `DESIGN SOUND` / `DESIGN GAPS`. Opt-in (costs quota); the human gate stays.
+- **Rationalization notes** — kit-plan/work/loop/review/spec/debug skills now name the typical corner-cutting excuses ("diff is tiny, skip tests") with counterarguments, making shortcuts explicit instead of silent.
+
 ### Fixed
 
 - **danger-guard**: path variants of the workspace root (`/path/to/root/`, `/path/to/root/.`) no longer bypass the `rm -rf` block — all targets are normalized with `resolve()` before comparison.
@@ -28,8 +38,6 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); ver
 
 ### Backlog (recorded, not implemented)
 
-- Sensitive-path awareness in `kit-review`: stricter checklist when the diff touches auth/payment/crypto code.
-- Rationalization notes in skills — documented counterarguments to skipping steps.
 - Host-command directives beyond `/teamwork-preview` — deferred, see `docs/command-directives.md`.
 - npm publication, signed releases, and pipeline file-locking — out of scope while distribution is GitHub-only and the agent is single-instance.
 

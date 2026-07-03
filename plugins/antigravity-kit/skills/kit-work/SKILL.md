@@ -34,3 +34,9 @@ Keep working until the plan is COMPLETELY executed — every step done or deviat
 - Do not add features, refactors, or "improvements" the plan does not mention.
 - Do not silently skip a step; skipped steps must be reported with a reason.
 - Do not mark work done while any completion criterion fails.
+
+## Rationalizations
+
+- "I remember the plan, no need to re-read the file." — Context trimming erases memory silently; what you "remember" may be a stale summary.
+- "This extra improvement is obviously good." — Unrequested changes are scope creep by definition; note it for a follow-up instead.
+- "I'll check the boxes at the end in one pass." — Boxes flipped without per-step verification are decoration, not progress tracking.

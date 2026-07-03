@@ -44,7 +44,8 @@ Run all engine commands with the `rtk` prefix when available. If `pipeline.mjs` 
    b. Write the artifact to `.agents/kit/pipeline/<feature>/<phase>.md`.
    c. Register it: `pipeline.mjs artifact <phase>.md`.
    d. **Stop at the gate.** Present the artifact and ask the user to approve. Do NOT advance on your own.
-   e. On approval: `pipeline.mjs approve` → the engine moves to the next phase.
+   e. **Design gate only:** offer the user an optional architecture pass — run the `kit-architect` subagent on `design.md` (+ `requirements.md` for traceability) and include its findings when presenting for approval. Costs quota; skip silently if subagents are unavailable on this plan. The human still approves either way.
+   f. On approval: `pipeline.mjs approve` → the engine moves to the next phase.
 3. **Front phases** (explore/requirements/design) use this skill's templates. When the engine reaches **task-plan**, hand off to `kit-plan`; **implementation** → `kit-work` + `kit-loop`; **review** → `kit-review`.
 4. **Persistence:** keep working the pipeline until the current phase is COMPLETELY resolved. If an engine command fails, run `doctor`, analyze the error, and try a corrected command — do not silently drop the pipeline.
 
@@ -59,3 +60,9 @@ Run all engine commands with the `rtk` prefix when available. If `pipeline.mjs` 
 - Never advance a phase without the user's approval — the human is the gate.
 - Never skip a phase to "save time"; use `inject` only with a genuinely pre-written artifact.
 - Keep artifacts compact (token hygiene): selective reads, no raw logs, `headroom` for large blobs.
+
+## Rationalizations
+
+- "Requirements are obvious, jump straight to design." — A misunderstanding is cheapest now; after design it multiplies into every task and test.
+- "The gate slows us down; approve and move on." — Self-approval turns the pipeline into theater; the human gate is the whole point of spec mode.
+- "We basically did that phase, inject it." — `inject` is for genuinely pre-written artifacts, not for retroactively justifying a skipped phase.

@@ -9,7 +9,9 @@ import {
   rmSync,
 } from "node:fs";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { join, dirname } from "node:path";
+import { fileURLToPath } from "node:url";
+import { spawnSync } from "node:child_process";
 
 import {
   install,
@@ -170,7 +172,7 @@ test("workflows command targets .agents and mirrors .agent when present", () => 
 test("subagent presets ship with the payload", () => {
   const home = freshHome();
   const { layout } = install({ home });
-  for (const agent of ["kit-planner.toml", "kit-reviewer.toml"]) {
+  for (const agent of ["kit-planner.toml", "kit-reviewer.toml", "kit-architect.toml"]) {
     const file = join(layout.pluginDir, "agents", agent);
     assert.ok(existsSync(file), `missing ${agent}`);
     const text = readFileSync(file, "utf8");
@@ -224,6 +226,27 @@ test("verify flags a stale installed_version.json", () => {
     (c) => c.name === "installed_version matches plugin.json",
   );
   assert.equal(failed.pass, false);
+});
+
+const CLI = join(dirname(fileURLToPath(import.meta.url)), "..", "bin", "cli.mjs");
+
+function runCli(args, cwd) {
+  const res = spawnSync(process.execPath, [CLI, ...args], {
+    cwd,
+    encoding: "utf8",
+    timeout: 30000,
+  });
+  assert.equal(res.status, 0, `cli ${args.join(" ")} failed: ${res.stderr}`);
+  return res.stdout;
+}
+
+test("cli update: fresh install, then already-up-to-date on re-run", () => {
+  const ws = freshHome();
+  const first = runCli(["update", "--workspace"], ws);
+  assert.match(first, /fresh install/);
+  assert.match(first, /CHANGELOG\.md/);
+  const second = runCli(["update", "--workspace"], ws);
+  assert.match(second, /already up to date \(\d+\.\d+\.\d+\)/);
 });
 
 test("skill corpus is complete", () => {
