@@ -5,6 +5,39 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); ver
 
 ## [Unreleased]
 
+## [0.3.0] — 2026-07-06
+
+Aligned with the official Antigravity customization docs (CLI 1.0.16) — the
+rules encoded by [antigravity-meta-plugin-kit](https://github.com/sipki-tech/antigravity-meta-plugin-kit),
+whose linter and `agy plugin validate` now both pass this payload clean.
+
+### Changed
+
+- **hooks.json moved to the plugin root** (`plugins/antigravity-kit/hooks.json`)
+  — the official location; `agy plugin validate` previously reported
+  `hooks: skipped (not found)`. The manifest `hooks` path and the installer's
+  `verify` were updated accordingly.
+- **Official response dialect** — `io.mjs` gained `denyResponse()`
+  (emits `decision: "deny"` + `reason` alongside the legacy
+  `allow_tool`/`deny_reason` pair until pre-2026-07 builds die out),
+  `ephemeralResponse()` (transient system-message injection), and
+  `workspacePaths[]` support in `cwdOf()`. danger-guard and rtk-enforcer
+  denials now speak both dialects; diagnostics-handoff documents the official
+  PostToolUse `{}` contract.
+
+### Fixed
+
+- **Installer: clean re-install** — `install`/`update` now remove the
+  previously installed plugin copy before copying the payload; `cpSync`
+  alone left files the payload no longer ships (a stale pre-0.3.0
+  `hooks/hooks.json` would survive updates and risk double hook
+  registration).
+
+### Backlog (recorded, not implemented)
+
+- Drop the legacy `allow_tool`/`deny_reason` keys once pre-2026-07 builds
+  are gone.
+
 ## [0.2.0] — 2026-07-03
 
 ### Added

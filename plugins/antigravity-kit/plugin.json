@@ -1,6 +1,6 @@
 {
   "name": "antigravity-kit",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Disciplined agent pipeline for Antigravity: plan -> work -> loop -> review, protective hooks, spec mode, and RTK/Headroom token optimization.",
   "author": {
     "name": "sipki-tech"
@@ -20,7 +20,7 @@
   ],
   "skills": "./skills",
   "rules": "./rules",
-  "hooks": "./hooks/hooks.json",
+  "hooks": "./hooks.json",
   "interface": {
     "displayName": "Antigravity Kit",
     "shortDescription": "Kit workflow cycle (plan/work/loop/review), spec mode, safety hooks, and token hygiene for Antigravity.",

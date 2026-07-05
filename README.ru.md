@@ -194,7 +194,7 @@ node bin/cli.mjs install --dry-run
 
 Гайд контрибьютора: [CONTRIBUTING.md](CONTRIBUTING.md). История версий: [CHANGELOG.md](CHANGELOG.md). CI гоняет тесты и smoke инсталлера на ubuntu/macos × Node 20/22.
 
-Структура: `plugins/antigravity-kit/` — payload (скиллы, rules, хуки, скрипты, workflows, агенты, mcp_config); `installer/` + `bin/cli.mjs` — npx-инсталлер. Логика хуков — в импортируемых `.mjs`-модулях; `hooks/hooks.json` — тонкий адаптер: при смене формата preview обновляется только он. Референс-дизайн директив для хост-команд: [docs/command-directives.md](docs/command-directives.md).
+Структура: `plugins/antigravity-kit/` — payload (скиллы, rules, хуки, скрипты, workflows, агенты, mcp_config); `installer/` + `bin/cli.mjs` — npx-инсталлер. Логика хуков — в импортируемых `.mjs`-модулях; корневой `hooks.json` — тонкий адаптер: при смене формата preview обновляется только он. Референс-дизайн директив для хост-команд: [docs/command-directives.md](docs/command-directives.md).
 
 ## Благодарности
 

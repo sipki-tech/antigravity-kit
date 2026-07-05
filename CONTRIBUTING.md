@@ -20,7 +20,7 @@ Node 18+ is the only requirement. There is no build step.
 
 ## Layout
 
-- `plugins/antigravity-kit/` — the payload Antigravity loads: `skills/`, `workflows/`, `rules/`, `hooks/hooks.json` (thin wire adapter), `scripts/` (hook logic + pipeline engine), `agents/`, `mcp_config.json`.
+- `plugins/antigravity-kit/` — the payload Antigravity loads: `skills/`, `workflows/`, `rules/`, root `hooks.json` (thin wire adapter), `scripts/` (hook logic + pipeline engine), `agents/`, `mcp_config.json`.
 - `installer/` + `bin/cli.mjs` — the npx installer.
 - `test/` — `node --test` suites: hooks, pipeline engine, installer.
 
@@ -28,7 +28,7 @@ Node 18+ is the only requirement. There is no build step.
 
 - **Skill**: directory under `plugins/antigravity-kit/skills/<name>/SKILL.md` with `name` + `description` frontmatter (description must include the trigger phrase). Add it to the corpus test in `test/installer.test.mjs`.
 - **Workflow**: `plugins/antigravity-kit/workflows/<name>.md` with a `description` frontmatter — keep it a thin alias that points at the skill.
-- **Hook**: importable logic in `scripts/<name>.mjs`, wire it in `hooks/hooks.json`, run it through `runHook`, keep it fail-open, add unit + e2e tests.
+- **Hook**: importable logic in `scripts/<name>.mjs`, wire it in the root `hooks.json`, run it through `runHook`, keep it fail-open, add unit + e2e tests.
 
 ## Commits
 

@@ -154,6 +154,15 @@ test("danger-guard: blocks rm -rf outside workspace", () => {
   assert.equal(dangerCheck(`rm -rf ${CWD}`, CWD).allow_tool, false);
 });
 
+test("danger-guard: denies speak both response dialects (official + legacy)", () => {
+  const denied = dangerCheck("rm -rf /", CWD);
+  assert.equal(denied.decision, "deny");
+  assert.equal(denied.reason, denied.deny_reason);
+  const allowed = dangerCheck("ls -la", CWD);
+  assert.equal(allowed.decision, "allow");
+  assert.equal(allowed.allow_tool, true);
+});
+
 test("danger-guard: normalizes path variants of the workspace root", () => {
   // Regression: trailing slash / dot variants must not bypass the root check.
   assert.equal(dangerCheck(`rm -rf ${CWD}/`, CWD).allow_tool, false);

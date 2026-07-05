@@ -4,7 +4,7 @@
 
 import { resolve } from "node:path";
 import { pathToFileURL } from "node:url";
-import { runHook, commandLineOf, cwdOf, ALLOW } from "./lib/io.mjs";
+import { runHook, commandLineOf, cwdOf, denyResponse, ALLOW } from "./lib/io.mjs";
 
 // Wrappers that can precede the real command: sudo/command/env and
 // VAR=value assignments. Matched so `sudo rm -rf /` is still caught.
@@ -26,7 +26,8 @@ export function checkCommand(cmd, cwd) {
 }
 
 function deny(reason) {
-  return { allow_tool: false, deny_reason: `[antigravity-kit danger-guard] ${reason}` };
+  // Official decision dialect + legacy keys (see lib/io.mjs).
+  return denyResponse(`[antigravity-kit danger-guard] ${reason}`);
 }
 
 const RM_RE = new RegExp(

@@ -23,6 +23,6 @@ Copies the skills into `~/.codex/skills/`. Check your Codex version's skills sup
 
 ## What does not port
 
-- `hooks/hooks.json` and `scripts/*.mjs` — Antigravity hook API only (the scripts' logic is reusable; the wire format is not).
+- Root-level `hooks.json` and `scripts/*.mjs` — Antigravity hook API only (the scripts' logic is reusable; the wire format is not).
 - `plugin.json` — Antigravity manifest.
 - `rules/` — copy the content into the host's equivalent (CLAUDE.md / AGENTS.md) manually if wanted.

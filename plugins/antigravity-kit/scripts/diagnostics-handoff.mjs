@@ -4,7 +4,7 @@
 
 import { extname } from "node:path";
 import { pathToFileURL } from "node:url";
-import { runHook, editedFileOf, injectResponse } from "./lib/io.mjs";
+import { runHook, editedFileOf, injectResponse, ALLOW } from "./lib/io.mjs";
 
 const CHECKS = {
   ".ts": "tsc / eslint / project test suite",
@@ -54,8 +54,9 @@ export function reminderFor(file) {
 if (import.meta.url === pathToFileURL(process.argv[1] ?? "").href)
 runHook((input) => {
   const note = reminderFor(editedFileOf(input));
-  if (!note) return { allow_tool: true };
-  // Injection on PostToolUse is unverified in Antigravity (ASW no-ops here);
-  // unknown keys are ignored, so this degrades to a plain allow.
-  return { allow_tool: true, ...injectResponse(note) };
+  // Official PostToolUse contract expects {}; injection here is unverified
+  // (no-ops in some builds) and unknown keys are ignored by the host, so
+  // attaching the note is a harmless best-effort that degrades to a no-op.
+  if (!note) return ALLOW;
+  return { ...ALLOW, ...injectResponse(note) };
 });

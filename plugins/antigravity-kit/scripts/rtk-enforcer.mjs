@@ -5,7 +5,7 @@
 // too complex to rewrite safely.
 
 import { pathToFileURL } from "node:url";
-import { runHook, commandLineOf, ALLOW } from "./lib/io.mjs";
+import { runHook, commandLineOf, denyResponse, ALLOW } from "./lib/io.mjs";
 import { rtkAvailable, rtkHookAlreadyInstalled } from "./lib/detect.mjs";
 
 const PREFIXES = [
@@ -56,10 +56,9 @@ export function checkCommand(cmd, env = process.env, probes = {}) {
   if (alreadyHooked()) return ALLOW;
 
   const suggestion = [...tokens.slice(0, start), "rtk", ...tokens.slice(start)].join(" ");
-  return {
-    allow_tool: false,
-    deny_reason: `[antigravity-kit token-hygiene] Run this through rtk to compress the output: \`${suggestion}\`. To intentionally run raw, prefix with KIT_RAW=1.`,
-  };
+  return denyResponse(
+    `[antigravity-kit token-hygiene] Run this through rtk to compress the output: \`${suggestion}\`. To intentionally run raw, prefix with KIT_RAW=1.`,
+  );
 }
 
 if (import.meta.url === pathToFileURL(process.argv[1] ?? "").href)

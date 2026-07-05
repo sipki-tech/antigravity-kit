@@ -46,9 +46,15 @@ export function install(opts = {}) {
   const layout = detectLayout(opts);
   const journal = createJournal(Boolean(opts.dryRun));
 
+  // Clean re-install: cpSync copies over an existing dir without removing
+  // files the payload no longer ships, so stale artifacts (e.g. the
+  // pre-0.3.0 hooks/hooks.json) would survive updates and risk double hook
+  // registration.
+  removeDir(journal, layout.pluginDir);
   copyDir(journal, PAYLOAD_DIR, layout.pluginDir);
   writeInstalledVersion(journal, layout.pluginDir);
   for (const mirror of layout.mirrorPluginDirs) {
+    removeDir(journal, mirror);
     copyDir(journal, PAYLOAD_DIR, mirror);
     writeInstalledVersion(journal, mirror);
   }
@@ -101,7 +107,8 @@ export function verify(opts = {}) {
     "installed_version.json present",
     existsSync(join(layout.pluginDir, "installed_version.json")),
   );
-  const hooks = readJson(join(layout.pluginDir, "hooks", "hooks.json"));
+  // Official location is the plugin root; `agy plugin validate` only looks there.
+  const hooks = readJson(join(layout.pluginDir, "hooks.json"));
   ok("hooks.json parses", Boolean(hooks?.[PLUGIN_NAME]));
   for (const script of [
     "kit-wake-word.mjs",

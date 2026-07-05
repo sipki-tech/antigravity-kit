@@ -194,7 +194,7 @@ node bin/cli.mjs install --dry-run
 
 Contributor guide: [CONTRIBUTING.md](CONTRIBUTING.md). Version history: [CHANGELOG.md](CHANGELOG.md). CI runs the test suite plus an installer smoke on ubuntu/macos × Node 20/22.
 
-Layout: `plugins/antigravity-kit/` is the payload (skills, rules, hooks, scripts, workflows, agents, mcp_config); `installer/` + `bin/cli.mjs` is the npx installer. Hook logic lives in importable `.mjs` modules; `hooks/hooks.json` is a thin adapter — when the preview hook format changes, only the adapter needs updating. Design reference for future host-command directives: [docs/command-directives.md](docs/command-directives.md).
+Layout: `plugins/antigravity-kit/` is the payload (skills, rules, hooks, scripts, workflows, agents, mcp_config); `installer/` + `bin/cli.mjs` is the npx installer. Hook logic lives in importable `.mjs` modules; root-level `hooks.json` is a thin adapter — when the preview hook format changes, only the adapter needs updating. Design reference for future host-command directives: [docs/command-directives.md](docs/command-directives.md).
 
 ## Acknowledgments
 
